@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seddon Workroom</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Seddon repairs, takings and wages — Master Dry Cleaners">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html, body { min-height: 100%; }
+</style>
+</head>
+<body>
+<div id="lock" hidden></div>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="wrap bar">
+      <div class="brand">
+        <h1>Seddon Workroom</h1>
+        <span class="sub">Master Dry Cleaners · repairs, takings &amp; wages</span>
+      </div>
+      <div class="weekpick" aria-label="Choose the week">
+        <span class="ticket" id="weekTicket">W/E</span>
+        <button type="button" id="prevWeek" aria-label="Previous week">‹</button>
+        <select id="weekSelect" aria-label="Week ending"></select>
+        <button type="button" id="nextWeek" aria-label="Next week">›</button>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <div class="wrap" id="tabs">
+        <a href="#overview">Overview</a>
+        <a href="#roster">Roster planner</a>
+        <a href="#repairs">Repairs &amp; wages</a>
+        <a href="#intake">Other stores</a>
+        <a href="#store">Store takings</a>
+        <a href="#months">Monthly reports</a>
+        <a href="#photos">Photos</a>
+        <a href="#checks">Data checks</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap" id="main">
+    <section class="view" id="view" aria-live="polite"></section>
+    <footer class="foot" id="foot"></footer>
+  </main>
+</div>
+
+<div id="boot" class="lock"><p class="muted">Loading Seddon figures…</p></div>
+
+<script src="assets/vendor/chart.umd.js"></script>
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>

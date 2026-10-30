@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seddon Workroom Admin</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  main.wrap { max-width: 980px; }
+  .step > header h2 { display: flex; align-items: center; gap: 10px; }
+  .step > header h2 .n { font: 600 .75rem/1 var(--mono); background: var(--tag); color: var(--tag-ink); border-radius: 4px; padding: 4px 6px; }
+  .form { display: grid; gap: 12px; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  .row .field { flex: 1 1 150px; }
+  .row .field.narrow { flex: 0 1 110px; }
+  .field input[type="file"] { padding: 6px; }
+  .result { font-size: .875rem; color: var(--ink-2); }
+  .result.ok { color: var(--good-ink); } .result.err { color: var(--bad-ink); }
+  .publish { position: sticky; bottom: max(12px, env(safe-area-inset-bottom, 0px)); z-index: 10; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; background: var(--ink); color: var(--card); border-radius: 12px; padding: 12px 16px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .publish .btn { background: var(--tag); color: var(--tag-ink); border-color: var(--tag); }
+  .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+  .thumbs figure { margin: 0; display: grid; gap: 4px; font-size: .75rem; color: var(--ink-3); }
+  .thumbs img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 6px; border: 1px solid var(--rule); background: var(--wash); }
+  .thumbs button { justify-self: start; }
+  .stafftable input { width: 100%; min-width: 70px; border: 1px solid var(--rule-2); border-radius: 6px; padding: 5px 7px; background: var(--card); }
+  .stafftable td, .stafftable th { text-align: left; }
+  code { font-family: var(--mono); font-size: .8125rem; background: var(--wash); padding: 1px 5px; border-radius: 4px; }
+  ol.steps li code { white-space: nowrap; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap bar">
+    <div class="brand"><h1>Seddon Workroom</h1><span class="sub">Admin — update figures, photos and settings</span></div>
+    <a class="btn ghost" href="./">Back to the dashboard</a>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <section class="panel step" id="connectPanel">
+    <header><h2><span class="n">1</span>Connect to GitHub</h2><p>Saved on this device only</p></header>
+    <form class="form" id="connectForm">
+      <div class="row">
+        <label class="field" for="ghOwner">GitHub account<input id="ghOwner" autocomplete="off" placeholder="e.g. hudsongroup" required></label>
+        <label class="field" for="ghRepo">Repository<input id="ghRepo" autocomplete="off" placeholder="seddon-workroom" required></label>
+        <label class="field narrow" for="ghBranch">Branch<input id="ghBranch" autocomplete="off" value="main" required></label>
+      </div>
+      <label class="field" for="ghToken">Access token (fine-grained, "Contents: Read and write" on this repository)<input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…" required></label>
+      <div class="row"><button class="btn" type="submit">Connect</button><span class="result" id="connectResult" role="status"></span></div>
+    </form>
+  </section>
+
+  <section class="panel step" id="unlockPanel" hidden>
+    <header><h2><span class="n">2</span>Unlock the figures</h2><p>Same passphrase as the dashboard</p></header>
+    <form class="form" id="unlockForm">
+      <label class="field" for="adminPass">Passphrase<input id="adminPass" type="password" autocomplete="current-password" required></label>
+      <div class="row"><button class="btn" type="submit">Unlock</button><span class="result" id="unlockResult" role="status"></span></div>
+    </form>
+  </section>
+
+  <div id="work" class="view" hidden></div>
+</main>
+
+<script src="assets/vendor/xlsx.full.min.js"></script>
+<script type="module" src="assets/admin.js"></script>
+</body>
+</html>

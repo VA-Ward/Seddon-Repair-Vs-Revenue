@@ -1,0 +1,56 @@
+name: Employment Hero sync
+
+# Pulls Seddon's timesheet hours and wage cost from Employment Hero every morning
+# and adds them to the encrypted dashboard data. Set up the secrets first —
+# see "Employment Hero" in README.md.
+
+on:
+  schedule:
+    - cron: "30 19 * * *"   # 6:30am Melbourne in summer (5:30am in winter)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test the connection only, sync = update the dashboard"
+        type: choice
+        options: [check, sync]
+        default: check
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eh-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Pull hours and wages from Employment Hero
+        env:
+          EH_API_KEY: ${{ secrets.EH_API_KEY }}
+          EH_BUSINESS_ID: ${{ secrets.EH_BUSINESS_ID }}
+          DASHBOARD_PASSPHRASE: ${{ secrets.DASHBOARD_PASSPHRASE }}
+          EH_LOCATION: ${{ vars.EH_LOCATION || 'Seddon' }}
+          EH_BASE_URL: ${{ vars.EH_BASE_URL || 'https://api.yourpayroll.com.au' }}
+          EH_WEEKS: ${{ vars.EH_WEEKS || '26' }}
+          MODE: ${{ github.event_name == 'schedule' && 'sync' || inputs.mode }}
+        run: node scripts/eh-sync.mjs
+
+      - name: Save the updated (still encrypted) data file
+        if: ${{ github.event_name == 'schedule' || inputs.mode == 'sync' }}
+        run: |
+          git config user.name "seddon-sync"
+          git config user.email "seddon-sync@users.noreply.github.com"
+          git add data/vault.json
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          git commit -m "Employment Hero sync $(date -u +%F)"
+          git pull --rebase --autostash
+          git push
